@@ -1,0 +1,225 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Poppins', sans-serif;
+}
+header {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	line-height: 56px;
+	background-color: #fff;
+	box-shadow: 0px 4px 10px -4px #0003;
+	z-index: 1;
+}
+
+header .wrapper-header {
+	display: flex;
+	flex-direction: row;
+	max-width: 1100px;
+	margin: 0 auto;
+	padding: 8px 32px;
+}
+
+header .header-logo {
+	display: flex;
+	flex-direction: row;
+	text-decoration: none;
+}
+
+header .header-logo .header-logo-img {
+	max-height: 45px;
+	height: 100%;
+	position: relative;
+	top: 5px;
+}
+
+header .header-logo .header-app-name {
+	font-family: 'Poppins', sans-serif;
+	font-weight: bold;
+	font-size: 23px;
+	color: #414141;
+	padding-left: 8px;
+}
+.wrapper {
+	display: block;
+	width: 100%;
+	max-width: 1100px;
+	margin: 120px auto;
+	padding: 0 32px;
+}
+
+@keyframes cardSongAnimation {
+	from {
+		opacity: 0;
+		top: 80px;
+	}
+	to {
+		opacity: 1;
+		top: 0px;
+	}
+}
+
+.card-song {
+	display: flex !important;
+	flex-direction: row !important;
+	align-items: center;
+	margin-top: 15px;
+	border-radius: 8px !important;
+	position: relative;
+	background-color: #fff;
+	cursor: pointer;
+	user-select: none;
+	box-shadow: 0 2px 3px rgb(0 0 0 / 10%);
+	transition: all 0.15s cubic-bezier(0.4, 0, 1, 1);
+	animation-name: cardSongAnimation;
+	animation-duration: 1s;
+}
+
+.song-list .card-song:hover {
+	background-color: #f0f0f0;
+}
+.card-song-icon {
+	display: block;
+	width: 50px;
+	height: 50px;
+	min-width: 50px;
+	min-height: 50px;
+	margin: 0 0 0 16px;
+	border-radius: 50%;
+	background: linear-gradient(33deg, #f82979, #f0882b);
+	cursor: pointer;
+	user-select: none;
+	box-shadow: 0 1px 2px 0px rgb(0 0 0 / 0%);
+	opacity: 0.85;
+	transition: all 0.15s cubic-bezier(0.63, 0.28, 0.49, 0.83);
+	flex-shrink: 0;
+}
+
+.card-song-icon:hover {
+	opacity: 1;
+	box-shadow: 0 1px 4px 0px rgb(0 0 0 / 30%);
+}
+.card-song-icon .icon {
+	display: block;
+	width: 100%;
+	height: 100%;
+	line-height: 50px;
+	text-align: center;
+	border-radius: 50%;
+	font-size: 35px;
+	color: #fff;
+}
+.card-song .card-song-icon .icon::before {
+	display: block;
+	content: 'play_arrow';
+}
+.card-song.play .card-song-icon .icon::before,
+.player.play .card-song .card-song-icon .icon::before {
+	content: 'pause';
+}
+.card-song-canvas-wave {
+	display: flex;
+	box-sizing: border-box;
+	flex-direction: row;
+	/* flex-shrink: 0; */
+	margin: 16px;
+	font-size: 16px;
+	color: #989898;
+	font-weight: 600;
+	/* max-width: 300px; */
+	width: 100%;
+	position: relative;
+	height: 45px;
+}
+
+.card-song-canvas-wave wave,
+.card-song-canvas-wave canvas {
+	/* max-width: 100% !important; */
+	width: 100%;
+	overflow: hidden !important;
+}
+.card-song-time {
+	display: flex;
+	flex-direction: row;
+	flex-shrink: 0;
+	padding-right: 16px;
+	font-size: 16px;
+	color: #989898;
+	font-weight: 600;
+}
+.card-song-time .icon {
+	font-size: 21px;
+	padding-right: 6px;
+}
+.card-body {
+	display: flex;
+	flex-shrink: 1 !important;
+	flex-grow: 1;
+	flex-direction: column;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.card-song-artist,
+.card-song-name {
+	flex-shrink: 1;
+	flex-grow: 1;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.player {
+	display: block;
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: -400px;
+	margin: 0;
+	/* height: 100px; */
+	box-shadow: 0 -3px 5px rgb(28 28 28 / 25%);
+	transition: all 0.3s cubic-bezier(0.63, 0.28, 0.49, 0.83);
+	background-color: #fff;
+	min-width: 92px;
+}
+
+.player.open {
+	bottom: 0px;
+}
+
+.player::before {
+	display: block;
+	content: '';
+	height: 5px;
+	width: 100%;
+	background: linear-gradient(33deg, #f82979, #f0882b);
+}
+
+.player .wrapper {
+	margin: 0 auto;
+}
+
+.player .card-song {
+	border: none !important;
+	margin: 0 auto;
+	box-shadow: none;
+	cursor: initial;
+	background: transparent;
+}
+.player .card-body {
+	max-width: 100px;
+	min-width: 200px;
+}
+
+@media only screen and (max-width: 900px) {
+	header .wrapper-header {
+		padding: 8px 16px;
+	}
+	.wrapper {
+		padding: 0 16px;
+	}
+}
