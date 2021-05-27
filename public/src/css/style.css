@@ -146,6 +146,7 @@ header .header-logo .header-app-name {
 	/* max-width: 100% !important; */
 	width: 100%;
 	overflow: hidden !important;
+	height: 100% !important;
 }
 .card-song-time {
 	display: flex;
@@ -155,6 +156,7 @@ header .header-logo .header-app-name {
 	font-size: 16px;
 	color: #989898;
 	font-weight: 600;
+	text-align: right;
 }
 .card-song-time .icon {
 	font-size: 21px;
@@ -176,6 +178,7 @@ header .header-logo .header-app-name {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
+	margin-bottom: 0px !important;
 }
 
 .player {
@@ -235,11 +238,35 @@ header .header-logo .header-app-name {
 	display: block;
 }
 
+.player .card-song-time {
+	max-width: 140px;
+	width: 100%;
+}
+
 @media only screen and (max-width: 900px) {
 	header .wrapper-header {
 		padding: 8px 16px;
 	}
 	.wrapper {
 		padding: 0 16px;
+	}
+	.player .wrapper {
+		padding: 0px;
+	}
+	.card-song-canvas-wave {
+		position: absolute;
+		width: calc(100% - 238px);
+		left: 83px;
+		bottom: 5px;
+		margin: 0;
+		z-index: 0;
+		height: 20px;
+	}
+	.player .card-body {
+		margin-bottom: 40px;
+		padding: 8px 16px 0px 16px;
+		max-width: 100%;
+		min-width: auto;
+		text-align: center;
 	}
 }

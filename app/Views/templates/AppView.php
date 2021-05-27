@@ -41,7 +41,7 @@
 					<div class="card-song-canvas-wave" id="waveform"></div>
 					<div class="card-song-time">
 						<span class="material-icons-round icon">schedule</span>
-						<span class="time" id="player-song-time-elapsed">00:00</span>
+						<span class="time" id="player-song-time-elapsed"></span>
 						<span class="time" id="player-song-time"></span>
 					</div>
 				</div>

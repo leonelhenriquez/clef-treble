@@ -8,6 +8,9 @@ const player = {
 		progressColor: '#f82979',
 		height: 45,
 		responsive: true,
+		barWidth: 5,
+		barRadius: 4,
+		hideScrollbar: true,
 	},
 	isLoadingSong: false,
 	playerComponent: {},
@@ -92,7 +95,12 @@ const player = {
 				let min = Math.floor(currentTime / 60).toString();
 				let sec = Math.floor(currentTime - min * 60).toString();
 				sec = sec.length == 1 ? '0' + sec : sec;
-				player.playerComponent.timeElapsed.innerHTML = `${min}:${sec}`;
+				let time = `${min}:${sec}`;
+
+				if (player.playerComponent.timeElapsed.innerHTML !== time) {
+					console.log(time);
+					player.playerComponent.timeElapsed.innerHTML = time;
+				}
 			}
 		},
 	},
@@ -107,7 +115,7 @@ const player = {
 		player.playerComponent.nameArtistGender.innerHTML =
 			song.artista.nombre + ' - ' + song.genero.nombre;
 		player.playerComponent.time.innerHTML = '/' + song.tiempo;
-		player.playerComponent.timeElapsed = '00:00';
+		player.playerComponent.timeElapsed.innerHTML = '00:00';
 		player.wavesurfer.load(song.url);
 		player.songPlaying = song;
 	},
