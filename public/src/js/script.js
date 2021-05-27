@@ -1,151 +1,153 @@
-var SongList = {};
-var songPlaying = { id: 0 };
-var wavesurfer;
-var loadingSong = false;
-var player;
-
-const main = () => {
-	player = document.getElementById('player');
-	waveSurferCreate();
-	loadSongList(songList => {
-		let componetSongList = document.getElementById('song-list');
-		componetSongList.innerHTML = '';
-
-		SongList = songList;
-
-		let i = 0;
-		for (let key in SongList) {
-			setTimeout(() => {
-				componetSongList.append(songComponent(SongList[key]));
-			}, i * 60);
-			i++;
-		}
-	});
-};
-
-const addSongToPlayer = id => {
-	let playerSongName = document.getElementById('player-song-name');
-	let playerSongArtistGender = document.getElementById(
-		'player-song-artist-gender',
-	);
-	let playerSongTime = document.getElementById('player-song-time');
-	let song = SongList[id];
-
-	loadingSong = true;
-	player.classList.add('loading');
-	player.classList.add('open');
-	playerSongName.innerHTML = song.nombre;
-	playerSongArtistGender.innerHTML =
-		song.artista.nombre + ' - ' + song.genero.nombre;
-	playerSongTime.innerHTML = '/' + song.tiempo;
-	wavesurfer.load(song.url);
-	songPlaying = song;
-};
-
-const playPauseSong = () => {
-	if (!loadingSong) {
-		wavesurfer.playPause();
-	}
-};
-
-const resetSongComponent = () => {
-	document.querySelectorAll('[data-id-cancion]').forEach(element => {
-		element.classList.remove('play');
-	});
-};
-
-const songComponent = songData => {
-	let componet = document.createElement('DIV');
-	componet.classList.add('card');
-	componet.classList.add('card-song');
-	componet.setAttribute('data-id-cancion', songData.id);
-
-	componet.addEventListener('click', () => {
-		resetSongComponent();
-		if (songPlaying.id !== songData.id) {
-			addSongToPlayer(songData.id);
-		} else {
-			playPauseSong();
-		}
-	});
-
-	let content = `
-			<div class="card-song-icon">
-				<span class="material-icons-round icon"></span>
-			</div>
-			<div class="card-body">
-        <h5 class="card-title card-song-name">${songData.nombre}</h5>
-				<div class="card-text card-song-artist-gender">${songData.artista.nombre} - ${songData.genero.nombre}</div>
-			</div>
-			<div class="card-song-time">
-				<span class="material-icons-round icon">schedule</span>
-				<span class="time">${songData.tiempo}</span>
-			</div>`;
-
-	componet.innerHTML = content;
-	return componet;
-};
-
-const loadSongList = async eventResponse => {
-	fetch('/getcanciones')
-		.then(response => response.json())
-		.then(response => eventResponse(response));
-};
-
-const waveSurferCreate = () => {
-	wavesurfer = WaveSurfer.create({
+const player = {
+	songList: {},
+	songPlaying: { id: 0 },
+	wavesurfer: undefined,
+	wavesurferConfig: {
 		container: '#waveform',
 		waveColor: '#cccccc',
 		progressColor: '#f82979',
 		height: 45,
 		responsive: true,
-	});
+	},
+	isLoadingSong: false,
+	playerComponent: {},
+	init: () => {
+		player.playerComponent = {
+			container: document.getElementById('player'),
+			songName: document.getElementById('player-song-name'),
+			nameArtistGender: document.getElementById('player-song-artist-gender'),
+			time: document.getElementById('player-song-time'),
+			timeElapsed: document.getElementById('player-song-time-elapsed'),
+			playPause: document.getElementById('btn-player-play-pause'),
+		};
 
-	wavesurfer.on('play', () => {
-		let componetSong = document.querySelectorAll(
-			`[data-id-cancion="${songPlaying.id}"]`,
-		)[0];
-		//let player = document.getElementById('player');
-		componetSong.classList.add('play');
-		player.classList.add('play');
-	});
+		player.wavesurfer = WaveSurfer.create(player.wavesurferConfig);
 
-	wavesurfer.on('pause', () => {
-		let componetSong = document.querySelectorAll(
-			`[data-id-cancion="${songPlaying.id}"]`,
-		)[0];
-		//let player = document.getElementById('player');
-		componetSong.classList.remove('play');
-		player.classList.remove('play');
-	});
+		player.wavesurfer.on('play', player.events.play);
 
-	/*wavesurfer.on('loading', percent => {
-		if (percent === 100) {
-			loading = false;
-			player.classList.remove('loading');
+		player.wavesurfer.on('pause', player.events.pause);
+
+		player.wavesurfer.on(
+			'ready',
+			player.wavesurfer.play.bind(player.wavesurfer),
+		);
+		player.wavesurfer.on('ready', player.events.ready);
+
+		player.wavesurfer.on('audioprocess', player.events.audioProcess);
+
+		player.playerComponent.playPause.addEventListener(
+			'click',
+			player.playPauseSong,
+		);
+
+		player.loadSongList(songList => {
+			let componetSongList = document.getElementById('song-list');
+
+			componetSongList.innerHTML = '';
+
+			player.songList = songList;
+
+			let i = 0;
+			for (let key in player.songList) {
+				setTimeout(() => {
+					componetSongList.append(player.songComponent(player.songList[key]));
+				}, i * 60);
+				i++;
+			}
+		});
+	},
+	playPauseSong: () => {
+		if (!player.isLoadingSong) {
+			player.wavesurfer.playPause();
 		}
-	});*/
-	// Autoplay song
-	wavesurfer.on('ready', wavesurfer.play.bind(wavesurfer));
-	wavesurfer.on('ready', () => {
-		loadingSong = false;
-		player.classList.remove('loading');
-	});
+	},
+	resetSongComponent: () => {
+		document.querySelectorAll('[data-id-cancion]').forEach(element => {
+			element.classList.remove('play');
+		});
+	},
 
-	timeElapsed = document.getElementById('player-song-time-elapsed');
+	events: {
+		play: () => {
+			let componetSong = document.querySelectorAll(
+				`[data-id-cancion="${player.songPlaying.id}"]`,
+			)[0];
+			componetSong.classList.add('play');
+			player.playerComponent.container.classList.add('play');
+		},
+		pause: () => {
+			let componetSong = document.querySelectorAll(
+				`[data-id-cancion="${player.songPlaying.id}"]`,
+			)[0];
+			componetSong.classList.remove('play');
+			player.playerComponent.container.classList.remove('play');
+		},
+		ready: () => {
+			player.isLoadingSong = false;
+			player.playerComponent.container.classList.remove('loading');
+		},
+		audioProcess: () => {
+			if (player.wavesurfer.isPlaying()) {
+				let currentTime = player.wavesurfer.getCurrentTime();
+				let min = Math.floor(currentTime / 60).toString();
+				let sec = Math.floor(currentTime - min * 60).toString();
+				sec = sec.length == 1 ? '0' + sec : sec;
+				player.playerComponent.timeElapsed.innerHTML = `${min}:${sec}`;
+			}
+		},
+	},
 
-	wavesurfer.on('audioprocess', () => {
-		if (wavesurfer.isPlaying()) {
-			let currentTime = wavesurfer.getCurrentTime();
-			let min = Math.floor(currentTime / 60).toString();
-			let sec = Math.floor(currentTime - min * 60).toString();
-			sec = sec.length == 1 ? '0' + sec : sec;
-			timeElapsed.innerHTML = min + ':' + sec;
-		}
-	});
+	addSongToPlayer: id => {
+		let song = player.songList[id];
 
-	let btnPlayPause = document.getElementById('btn-player-play-pause');
-	btnPlayPause.addEventListener('click', playPauseSong);
+		player.isLoadingSong = true;
+		player.playerComponent.container.classList.add('loading');
+		player.playerComponent.container.classList.add('open');
+		player.playerComponent.songName.innerHTML = song.nombre;
+		player.playerComponent.nameArtistGender.innerHTML =
+			song.artista.nombre + ' - ' + song.genero.nombre;
+		player.playerComponent.time.innerHTML = '/' + song.tiempo;
+		player.playerComponent.timeElapsed = '00:00';
+		player.wavesurfer.load(song.url);
+		player.songPlaying = song;
+	},
+	loadSongList: async eventResponse => {
+		fetch('/getcanciones')
+			.then(response => response.json())
+			.then(response => eventResponse(response));
+	},
+	songComponent: songData => {
+		let componet = document.createElement('DIV');
+		componet.classList.add('card');
+		componet.classList.add('card-song');
+		componet.setAttribute('data-id-cancion', songData.id);
+
+		componet.addEventListener('click', () => {
+			player.resetSongComponent();
+			if (player.songPlaying.id !== songData.id) {
+				player.addSongToPlayer(songData.id);
+			} else {
+				player.playPauseSong();
+			}
+		});
+
+		let content = `
+				<div class="card-song-icon">
+					<span class="material-icons-round icon"></span>
+				</div>
+				<div class="card-body">
+					<h5 class="card-title card-song-name">${songData.nombre}</h5>
+					<div class="card-text card-song-artist-gender">${songData.artista.nombre} - ${songData.genero.nombre}</div>
+				</div>
+				<div class="card-song-time">
+					<span class="material-icons-round icon">schedule</span>
+					<span class="time">${songData.tiempo}</span>
+				</div>`;
+
+		componet.innerHTML = content;
+		return componet;
+	},
 };
-
-window.addEventListener('load', main);
+window.addEventListener('load', () => {
+	player.init();
+});
