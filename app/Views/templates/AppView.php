@@ -31,6 +31,20 @@
 							<span class="visually-hidden">Loading...</span>
 						</div>
 					</div>
+					<div class="card-song-volumen" id="player-song-volumen">
+						<span class="material-icons-round icon" id="volumen-icon"
+							>volume_up</span
+						>
+						<input
+							type="range"
+							class="form-range"
+							value="100"
+							min="0"
+							max="100"
+							step="1"
+							id="player-song-volumen-control"
+						/>
+					</div>
 					<div class="card-body">
 						<h5 class="card-title card-song-name" id="player-song-name"></h5>
 						<div

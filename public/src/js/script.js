@@ -22,6 +22,7 @@ const player = {
 			time: document.getElementById('player-song-time'),
 			timeElapsed: document.getElementById('player-song-time-elapsed'),
 			playPause: document.getElementById('btn-player-play-pause'),
+			volumenControl: document.getElementById('player-song-volumen-control'),
 		};
 
 		player.wavesurfer = WaveSurfer.create(player.wavesurferConfig);
@@ -41,6 +42,11 @@ const player = {
 		player.playerComponent.playPause.addEventListener(
 			'click',
 			player.playPauseSong,
+		);
+
+		player.playerComponent.volumenControl.addEventListener(
+			'change',
+			player.events.volumen,
 		);
 
 		player.loadSongList(songList => {
@@ -98,10 +104,12 @@ const player = {
 				let time = `${min}:${sec}`;
 
 				if (player.playerComponent.timeElapsed.innerHTML !== time) {
-					console.log(time);
 					player.playerComponent.timeElapsed.innerHTML = time;
 				}
 			}
+		},
+		volumen: event => {
+			player.wavesurfer.setVolume(event.target.value / 100);
 		},
 	},
 
