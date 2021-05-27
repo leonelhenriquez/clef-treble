@@ -1,6 +1,27 @@
 var SongList = {};
 var songPlaying = { id: 0 };
 var wavesurfer;
+var loadingSong = false;
+var player;
+
+const main = () => {
+	player = document.getElementById('player');
+	waveSurferCreate();
+	loadSongList(songList => {
+		let componetSongList = document.getElementById('song-list');
+		componetSongList.innerHTML = '';
+
+		SongList = songList;
+
+		let i = 0;
+		for (let key in SongList) {
+			setTimeout(() => {
+				componetSongList.append(songComponent(SongList[key]));
+			}, i * 60);
+			i++;
+		}
+	});
+};
 
 const addSongToPlayer = id => {
 	let playerSongName = document.getElementById('player-song-name');
@@ -10,6 +31,8 @@ const addSongToPlayer = id => {
 	let playerSongTime = document.getElementById('player-song-time');
 	let song = SongList[id];
 
+	loadingSong = true;
+	player.classList.add('loading');
 	player.classList.add('open');
 	playerSongName.innerHTML = song.nombre;
 	playerSongArtistGender.innerHTML =
@@ -20,7 +43,9 @@ const addSongToPlayer = id => {
 };
 
 const playPauseSong = () => {
-	wavesurfer.playPause();
+	if (!loadingSong) {
+		wavesurfer.playPause();
+	}
 };
 
 const resetSongComponent = () => {
@@ -80,7 +105,7 @@ const waveSurferCreate = () => {
 		let componetSong = document.querySelectorAll(
 			`[data-id-cancion="${songPlaying.id}"]`,
 		)[0];
-		let player = document.getElementById('player');
+		//let player = document.getElementById('player');
 		componetSong.classList.add('play');
 		player.classList.add('play');
 	});
@@ -89,18 +114,23 @@ const waveSurferCreate = () => {
 		let componetSong = document.querySelectorAll(
 			`[data-id-cancion="${songPlaying.id}"]`,
 		)[0];
-		let player = document.getElementById('player');
+		//let player = document.getElementById('player');
 		componetSong.classList.remove('play');
 		player.classList.remove('play');
 	});
 
-	wavesurfer.on('loading', percent => {
+	/*wavesurfer.on('loading', percent => {
 		if (percent === 100) {
-			console.log('cargada');
+			loading = false;
+			player.classList.remove('loading');
 		}
-	});
+	});*/
 	// Autoplay song
 	wavesurfer.on('ready', wavesurfer.play.bind(wavesurfer));
+	wavesurfer.on('ready', () => {
+		loadingSong = false;
+		player.classList.remove('loading');
+	});
 
 	timeElapsed = document.getElementById('player-song-time-elapsed');
 
@@ -114,26 +144,8 @@ const waveSurferCreate = () => {
 		}
 	});
 
-	let player = document.getElementById('btn-player-play-pause');
-	player.addEventListener('click', playPauseSong);
-};
-
-const main = () => {
-	waveSurferCreate();
-	loadSongList(songList => {
-		let componetSongList = document.getElementById('song-list');
-		componetSongList.innerHTML = '';
-
-		SongList = songList;
-
-		let i = 0;
-		for (let key in SongList) {
-			setTimeout(() => {
-				componetSongList.append(songComponent(SongList[key]));
-			}, i * 60);
-			i++;
-		}
-	});
+	let btnPlayPause = document.getElementById('btn-player-play-pause');
+	btnPlayPause.addEventListener('click', playPauseSong);
 };
 
 window.addEventListener('load', main);

@@ -27,6 +27,9 @@
 				<div class="card card-song">
 					<div class="card-song-icon" id="btn-player-play-pause">
 						<span class="material-icons-round icon"></span>
+						<div class="spinner-border text-light" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
 					</div>
 					<div class="card-body">
 						<h5 class="card-title card-song-name" id="player-song-name"></h5>
