@@ -81,14 +81,18 @@ const player = {
 			let componetSong = document.querySelectorAll(
 				`[data-id-cancion="${player.songPlaying.id}"]`,
 			)[0];
-			componetSong.classList.add('play');
+			if (componetSong !== undefined) {
+				componetSong.classList.add('play');
+			}
 			player.playerComponent.container.classList.add('play');
 		},
 		pause: () => {
 			let componetSong = document.querySelectorAll(
 				`[data-id-cancion="${player.songPlaying.id}"]`,
 			)[0];
-			componetSong.classList.remove('play');
+			if (componetSong !== undefined) {
+				componetSong.classList.remove('play');
+			}
 			player.playerComponent.container.classList.remove('play');
 		},
 		ready: () => {
@@ -131,6 +135,10 @@ const player = {
 		componet.classList.add('card');
 		componet.classList.add('card-song');
 		componet.setAttribute('data-id-cancion', songData.id);
+
+		if (player.songPlaying.id == songData.id && player.wavesurfer.isPlaying()) {
+			componet.classList.add('play');
+		}
 
 		componet.addEventListener('click', () => {
 			player.resetSongComponent();

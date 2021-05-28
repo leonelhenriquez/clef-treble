@@ -360,8 +360,8 @@ input[type='range']::-webkit-slider-thumb {
 	}
 	.card-song-canvas-wave {
 		position: absolute;
-		width: calc(100% - 238px);
-		left: 83px;
+		width: calc(100% - 290px);
+		left: 130px;
 		bottom: 5px;
 		margin: 0;
 		z-index: 0;
@@ -373,8 +373,5 @@ input[type='range']::-webkit-slider-thumb {
 		max-width: 100%;
 		min-width: auto;
 		text-align: center;
-	}
-	.card-song-volumen {
-		margin-bottom: 25px;
 	}
 }
