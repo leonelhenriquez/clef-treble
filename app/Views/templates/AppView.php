@@ -11,18 +11,38 @@
 	<body>
 		<header>
 			<div class="wrapper-header">
-				<a href="/" class="header-logo">
+				<a href="#page/home" class="header-logo">
 					<img src="src/img/logo/logo.svg" class="header-logo-img" />
 					<div class="header-app-name">Clef Treble</div>
 				</a>
+				<nav class="nav">
+					<a class="nav-link" href="#page/home">Inicio</a>
+					<a class="nav-link" href="#page/info">Información</a>
+				</nav>
 			</div>
 		</header>
 
-		<section class="wrapper">
-			<div class="song-list" id="song-list" style="min-height: 0px"></div>
-			<nav aria-label="Page navigation" id="nav-pagination">
-				<ul class="pagination" id="pagination"></ul>
-			</nav>
+		<section class="wrapper contents-page">
+			<div data-page="home" style="display: none">
+				<div class="song-list" id="song-list" style="min-height: 0px"></div>
+				<nav aria-label="Page navigation" id="nav-pagination">
+					<ul class="pagination" id="pagination"></ul>
+				</nav>
+			</div>
+			<div data-page="info" style="display: none">
+				<img src="src/img/logo/logo2_op.svg" class="info-logo" />
+				<div class="content-information">
+					<figure class="text-center">
+						<h1>Del desarrollador de Clef Treble</h1>
+						<blockquote class="blockquote">
+							<p>
+								Esta es una pequeña App de prueba combinando las tecnologías.
+							</p>
+						</blockquote>
+						<figcaption class="blockquote-footer">Leonel Henriquez</figcaption>
+					</figure>
+				</div>
+			</div>
 		</section>
 
 		<div class="player" id="player">
@@ -35,9 +55,9 @@
 						</div>
 					</div>
 					<div class="card-song-volumen" id="player-song-volumen">
-						<span class="material-icons-round icon" id="volumen-icon"
-							>volume_up</span
-						>
+						<span class="material-icons-round icon" id="volumen-icon">
+							volume_up
+						</span>
 						<input
 							type="range"
 							class="form-range"
@@ -58,8 +78,15 @@
 					<div class="card-song-canvas-wave" id="waveform"></div>
 					<div class="card-song-time">
 						<span class="material-icons-round icon">schedule</span>
-						<span class="time" id="player-song-time-elapsed"></span>
-						<span class="time" id="player-song-time"></span>
+						<div class="timers">
+							<span class="time" id="player-song-time-elapsed"></span>
+							<span class="time" id="player-song-time"></span>
+						</div>
+					</div>
+					<div class="card-song-close-player">
+						<span class="material-icons-round icon" id="player-song-close"
+							>close</span
+						>
 					</div>
 				</div>
 			</div>

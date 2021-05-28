@@ -22,6 +22,10 @@ header .wrapper-header {
 	max-width: 1100px;
 	margin: 0 auto;
 	padding: 8px 32px;
+	align-content: center;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: nowrap;
 }
 
 header .header-logo {
@@ -43,6 +47,27 @@ header .header-logo .header-app-name {
 	font-size: 23px;
 	color: #414141;
 	padding-left: 8px;
+}
+header .nav {
+	font-weight: 600;
+	/* max-height: 40px; */
+	line-height: 20px;
+}
+
+header .nav .nav-link {
+	font-weight: bold;
+	color: #f9778c;
+	font-size: 18px;
+	background: linear-gradient(33deg, rgb(248 41 121 / 0%), #f0882b00);
+	border-radius: 20px;
+	margin: 0 5px;
+	transition: all 0.15s cubic-bezier(0.63, 0.28, 0.49, 0.83);
+}
+
+header .nav .nav-link:hover,
+header .nav .nav-link.active {
+	color: #fff;
+	background: linear-gradient(33deg, #f82979, #f0882b);
 }
 .wrapper {
 	display: block;
@@ -224,6 +249,13 @@ header .header-logo .header-app-name {
 	margin-bottom: 0px !important;
 }
 
+.card-song-close-player {
+	display: block;
+	min-width: 25px;
+	margin-right: 8px;
+	cursor: pointer;
+	user-select: none;
+}
 .player {
 	display: block;
 	position: fixed;
@@ -283,9 +315,14 @@ header .header-logo .header-app-name {
 
 .player .card-song-time {
 	max-width: 140px;
-	width: 100%;
+	width: fit-content;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: nowrap;
+	padding-left: 8px;
 }
-
 input[type='range'] {
 	outline: none !important;
 }
@@ -348,9 +385,20 @@ input[type='range']::-webkit-slider-thumb {
 	border-radius: 40px 0 0 40px;
 }
 
+.info-logo {
+	display: block;
+	width: 80%;
+	max-width: 500px;
+	margin: 200px auto;
+}
+
 @media only screen and (max-width: 900px) {
 	header .wrapper-header {
 		padding: 8px 16px;
+	}
+
+	header .nav {
+		display: none;
 	}
 	.wrapper {
 		padding: 0 16px;
@@ -373,5 +421,19 @@ input[type='range']::-webkit-slider-thumb {
 		max-width: 100%;
 		min-width: auto;
 		text-align: center;
+	}
+	.player .card-song-time {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding-right: 8px;
+	}
+
+	.player .card-song-time .timers {
+		width: fit-content;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
 	}
 }

@@ -25,6 +25,7 @@ const player = {
 			timeElapsed: document.getElementById('player-song-time-elapsed'),
 			playPause: document.getElementById('btn-player-play-pause'),
 			volumenControl: document.getElementById('player-song-volumen-control'),
+			close: document.getElementById('player-song-close'),
 		};
 
 		player.wavesurfer = WaveSurfer.create(player.wavesurferConfig);
@@ -50,6 +51,13 @@ const player = {
 			'change',
 			player.events.volumen,
 		);
+
+		player.playerComponent.close.addEventListener('click', player.closePlayer);
+	},
+	closePlayer: () => {
+		player.playerComponent.container.classList.remove('open');
+		player.wavesurfer.pause();
+		player.songPlaying = { id: 0 };
 	},
 	playPauseSong: () => {
 		if (!player.isLoadingSong) {
@@ -243,13 +251,59 @@ const pagination = {
 	},
 };
 
-/*loadSongList(result => {
-	player.songList = result.songList;
-	pagination.total = result.total;
-});
-*/
+const navigation = {
+	navs: undefined,
+	contents: undefined,
+	init: () => {
+		navigation.navs = document.querySelectorAll('header nav.nav .nav-link');
+		navigation.contents = document.querySelectorAll('.contents-page > *');
+		window.addEventListener('hashchange', navigation.events.hashchange);
+		navigation.events.hashchange();
+	},
+	events: {
+		hashchange: () => {
+			let hash = location.hash;
+			if (hash == '' || hash === '#page/home') {
+				navigation.events.changeTab('#page/home');
+				navigation.events.changeContent('home');
+				navigation.loaders.home();
+			} else if (hash === '#page/info') {
+				navigation.events.changeTab('#page/info');
+				navigation.events.changeContent('info');
+				navigation.loaders.home();
+			} else {
+				navigation.events.changeTab('#page/error');
+				navigation.events.changeContent('error');
+			}
+		},
+		changeTab: hash => {
+			navigation.navs.forEach(nav => {
+				if (nav.getAttribute('href') === hash) {
+					nav.classList.add('activate');
+				} else {
+					nav.classList.remove('activate');
+				}
+			});
+		},
+		changeContent: page => {
+			navigation.contents.forEach(content => {
+				if (content.getAttribute('data-page') === page) {
+					content.style.display = 'block';
+				} else {
+					content.style.display = 'none';
+				}
+			});
+		},
+	},
+	loaders: {
+		home: () => {
+			loadSongList(eventResultFetch);
+		},
+	},
+};
+
 window.addEventListener('load', () => {
+	navigation.init();
 	pagination.init();
 	player.init();
-	loadSongList(eventResultFetch);
 });
