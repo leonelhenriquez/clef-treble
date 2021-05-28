@@ -11,6 +11,9 @@
 	<body>
 		<header>
 			<div class="wrapper-header">
+				<div class="menu-btn" id="menu-btn">
+					<span class="material-icons-round">menu</span>
+				</div>
 				<a href="#page/home" class="header-logo">
 					<img src="src/img/logo/logo.svg" class="header-logo-img" />
 					<div class="header-app-name">Clef Treble</div>

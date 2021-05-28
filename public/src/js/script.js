@@ -275,6 +275,7 @@ const navigation = {
 				navigation.events.changeTab('#page/error');
 				navigation.events.changeContent('error');
 			}
+			document.body.classList.remove('openDrawer');
 		},
 		changeTab: hash => {
 			navigation.navs.forEach(nav => {
@@ -306,4 +307,11 @@ window.addEventListener('load', () => {
 	navigation.init();
 	pagination.init();
 	player.init();
+	document.getElementById('menu-btn').addEventListener('click', () => {
+		if (document.body.classList.contains('openDrawer')) {
+			document.body.classList.remove('openDrawer');
+		} else {
+			document.body.classList.add('openDrawer');
+		}
+	});
 });
