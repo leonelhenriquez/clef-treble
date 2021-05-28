@@ -24,4 +24,23 @@ class GeneroModel extends Model
 	protected $validationRules = [];
 	protected $validationMessages = [];
 	protected $skipValidation = false;
+
+
+	public function getAllGenero(){
+		$builder = $this->builder();
+		$builder->select('*');
+		$query = $builder->get();
+		$result = $query->getResultArray();
+		$query->freeResult();
+		return $result;
+	}
+
+	public function getGenero($genero){
+		$builder = $this->builder();
+		$builder->select('*')->where(sprintf("genero.id_genero='%d'",$genero));
+		$query = $builder->get();
+		$result = $query->getResultArray();
+		$query->freeResult();
+		return $result;
+	}
 }

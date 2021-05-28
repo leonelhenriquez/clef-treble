@@ -11,6 +11,8 @@ const player = {
 		barWidth: 5,
 		barRadius: 4,
 		hideScrollbar: true,
+		cursorWidth: 3,
+		cursorColor: '#f82979',
 	},
 	isLoadingSong: false,
 	playerComponent: {},
@@ -48,22 +50,6 @@ const player = {
 			'change',
 			player.events.volumen,
 		);
-
-		player.loadSongList(songList => {
-			let componetSongList = document.getElementById('song-list');
-
-			componetSongList.innerHTML = '';
-
-			player.songList = songList;
-
-			let i = 0;
-			for (let key in player.songList) {
-				setTimeout(() => {
-					componetSongList.append(player.songComponent(player.songList[key]));
-				}, i * 60);
-				i++;
-			}
-		});
 	},
 	playPauseSong: () => {
 		if (!player.isLoadingSong) {
@@ -75,7 +61,21 @@ const player = {
 			element.classList.remove('play');
 		});
 	},
+	renderSongList: () => {
+		let componetSongList = document.getElementById('song-list');
+		componetSongList.innerHTML = '';
+		componetSongList.style.minHeight = `${
+			100 * Object.keys(player.songList).length
+		}px`;
 
+		let i = 0;
+		for (let key in player.songList) {
+			setTimeout(() => {
+				componetSongList.append(player.songComponent(player.songList[key]));
+			}, i * 60);
+			i++;
+		}
+	},
 	events: {
 		play: () => {
 			let componetSong = document.querySelectorAll(
@@ -112,7 +112,6 @@ const player = {
 			player.wavesurfer.setVolume(event.target.value / 100);
 		},
 	},
-
 	addSongToPlayer: id => {
 		let song = player.songList[id];
 
@@ -126,11 +125,6 @@ const player = {
 		player.playerComponent.timeElapsed.innerHTML = '00:00';
 		player.wavesurfer.load(song.url);
 		player.songPlaying = song;
-	},
-	loadSongList: async eventResponse => {
-		fetch('/getcanciones')
-			.then(response => response.json())
-			.then(response => eventResponse(response));
 	},
 	songComponent: songData => {
 		let componet = document.createElement('DIV');
@@ -164,6 +158,90 @@ const player = {
 		return componet;
 	},
 };
+
+const loadSongList = async (eventResponse, page = 0) => {
+	fetch(`/getcanciones?p=${page}`, {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+		.then(response => response.json())
+		.then(response => eventResponse(response));
+};
+
+const eventResultFetch = result => {
+	player.songList = result.songList;
+	player.renderSongList();
+	let totalPagination = Math.ceil(result.total / 10);
+	if (pagination.total != totalPagination) {
+		pagination.total = totalPagination;
+		pagination.renderNavigation();
+	}
+};
+
+const pagination = {
+	total: 0,
+	current: 0,
+	componet: undefined,
+	componetNav: undefined,
+	init: () => {
+		pagination.componet = document.getElementById('pagination');
+		pagination.componetNav = document.getElementById('nav-pagination');
+		pagination.componetNav.classList.add('hide-pagination');
+	},
+	renderNavigation: () => {
+		if (pagination.total <= 1) {
+			return;
+		}
+		pagination.componet.innerHTML = '';
+		pagination.componet.append(
+			pagination.componentNavItem('Anterior', () => {
+				if (pagination.current > 0) {
+					pagination.current--;
+					loadSongList(eventResultFetch, pagination.current);
+				}
+			}),
+		);
+		for (let i = 0; i < pagination.total; i++) {
+			pagination.componet.append(
+				pagination.componentNavItem(i + 1, () => {
+					if (pagination.current !== i) {
+						pagination.current = i;
+						loadSongList(eventResultFetch, pagination.current);
+					}
+				}),
+			);
+		}
+		pagination.componet.append(
+			pagination.componentNavItem('Siguiente', () => {
+				if (pagination.current < pagination.total) {
+					pagination.current++;
+					loadSongList(eventResultFetch, pagination.current);
+				}
+			}),
+		);
+
+		pagination.componetNav.classList.remove('hide-pagination');
+	},
+	componentNavItem: (text, event) => {
+		let componet = document.createElement('LI');
+		componet.classList.add('page-link');
+		componet.addEventListener('click', event);
+
+		componet.innerHTML = `${text}`;
+
+		return componet;
+	},
+};
+
+/*loadSongList(result => {
+	player.songList = result.songList;
+	pagination.total = result.total;
+});
+*/
 window.addEventListener('load', () => {
+	pagination.init();
 	player.init();
+	loadSongList(eventResultFetch);
 });

@@ -19,7 +19,10 @@
 		</header>
 
 		<section class="wrapper">
-			<div class="song-list" id="song-list"></div>
+			<div class="song-list" id="song-list" style="min-height: 0px"></div>
+			<nav aria-label="Page navigation" id="nav-pagination">
+				<ul class="pagination" id="pagination"></ul>
+			</nav>
 		</section>
 
 		<div class="player" id="player">

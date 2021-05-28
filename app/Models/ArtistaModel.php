@@ -24,4 +24,22 @@ class ArtistaModel extends Model
 	protected $validationRules = [];
 	protected $validationMessages = [];
 	protected $skipValidation = false;
+
+	public function getAllArtista(){
+		$builder = $this->builder();
+		$builder->select('*');
+		$query = $builder->get();
+		$result = $query->getResultArray();
+		$query->freeResult();
+		return $result;
+	}
+
+	public function getArtista($artista){
+		$builder = $this->builder();
+		$builder->select('*')->where(sprintf("artista.id_artista='%d'",$artista));
+		$query = $builder->get();
+		$result = $query->getResultArray();
+		$query->freeResult();
+		return $result;
+	}
 }

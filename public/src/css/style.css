@@ -48,7 +48,7 @@ header .header-logo .header-app-name {
 	display: block;
 	width: 100%;
 	max-width: 1100px;
-	margin: 120px auto;
+	margin: 120px auto 150px auto;
 	padding: 0 32px;
 }
 
@@ -295,6 +295,57 @@ input[type='range']::-webkit-slider-runnable-track {
 input[type='range']::-webkit-slider-thumb {
 	background-color: #f7396b !important;
 	outline: none !important;
+}
+
+.hide-pagination {
+	display: none;
+}
+#nav-pagination {
+	display: flex;
+	width: 100%;
+	max-width: 100%;
+	min-height: 100%;
+	/* text-align:center; */
+	/* justify-content: center; */
+	/* flex-direction: row; */
+	/* flex-wrap: nowrap; */
+	/* padding: 15px; */
+	margin-bottom: 32px;
+	/* transition: all 0.5s; */
+}
+.pagination {
+	display: flex;
+	/* width: 100%; */
+	max-width: 100%;
+	margin: 0 auto;
+	justify-content: center;
+	flex-direction: row;
+	overflow: hidden;
+	flex-wrap: nowrap;
+}
+.pagination .page-link {
+	min-width: 40px;
+	text-align: center;
+	flex-shrink: 0;
+	cursor: pointer;
+	user-select: none;
+	font-weight: bold;
+	color: #f73a5e !important;
+}
+
+.pagination .page-link:last-child,
+.pagination .page-link:first-child {
+	background-color: #f73a5e;
+	color: #fff !important;
+	flex-shrink: 1;
+}
+
+.pagination .page-link:last-child {
+	border-radius: 0 40px 40px 0;
+}
+
+.pagination .page-link:first-child {
+	border-radius: 40px 0 0 40px;
 }
 
 @media only screen and (max-width: 900px) {
