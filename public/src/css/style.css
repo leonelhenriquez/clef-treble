@@ -383,7 +383,11 @@ input[type='range']::-webkit-slider-thumb {
 	font-weight: bold;
 	color: #f73a5e !important;
 }
-
+.pagination .page-link.active {
+	color: #f73a5e !important;
+	background-color: #dedede !important;
+	cursor: default;
+}
 .pagination .page-link:last-child,
 .pagination .page-link:first-child {
 	background-color: #f73a5e;

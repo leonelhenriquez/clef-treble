@@ -70,36 +70,36 @@ const player = {
 		});
 	},
 	renderSongList: () => {
-		let componetSongList = document.getElementById('song-list');
-		componetSongList.innerHTML = '';
-		componetSongList.style.minHeight = `${
+		let componentSongList = document.getElementById('song-list');
+		componentSongList.innerHTML = '';
+		componentSongList.style.minHeight = `${
 			100 * Object.keys(player.songList).length
 		}px`;
 
 		let i = 0;
 		for (let key in player.songList) {
 			setTimeout(() => {
-				componetSongList.append(player.songComponent(player.songList[key]));
+				componentSongList.append(player.songComponent(player.songList[key]));
 			}, i * 60);
 			i++;
 		}
 	},
 	events: {
 		play: () => {
-			let componetSong = document.querySelectorAll(
+			let componentSong = document.querySelectorAll(
 				`[data-id-cancion="${player.songPlaying.id}"]`,
 			)[0];
-			if (componetSong !== undefined) {
-				componetSong.classList.add('play');
+			if (componentSong !== undefined) {
+				componentSong.classList.add('play');
 			}
 			player.playerComponent.container.classList.add('play');
 		},
 		pause: () => {
-			let componetSong = document.querySelectorAll(
+			let componentSong = document.querySelectorAll(
 				`[data-id-cancion="${player.songPlaying.id}"]`,
 			)[0];
-			if (componetSong !== undefined) {
-				componetSong.classList.remove('play');
+			if (componentSong !== undefined) {
+				componentSong.classList.remove('play');
 			}
 			player.playerComponent.container.classList.remove('play');
 		},
@@ -139,16 +139,16 @@ const player = {
 		player.songPlaying = song;
 	},
 	songComponent: songData => {
-		let componet = document.createElement('DIV');
-		componet.classList.add('card');
-		componet.classList.add('card-song');
-		componet.setAttribute('data-id-cancion', songData.id);
+		let component = document.createElement('DIV');
+		component.classList.add('card');
+		component.classList.add('card-song');
+		component.setAttribute('data-id-cancion', songData.id);
 
 		if (player.songPlaying.id == songData.id && player.wavesurfer.isPlaying()) {
-			componet.classList.add('play');
+			component.classList.add('play');
 		}
 
-		componet.addEventListener('click', () => {
+		component.addEventListener('click', () => {
 			player.resetSongComponent();
 			if (player.songPlaying.id !== songData.id) {
 				player.addSongToPlayer(songData.id);
@@ -170,8 +170,8 @@ const player = {
 					<span class="time">${songData.tiempo}</span>
 				</div>`;
 
-		componet.innerHTML = content;
-		return componet;
+		component.innerHTML = content;
+		return component;
 	},
 };
 
@@ -192,26 +192,26 @@ const eventResultFetch = result => {
 	let totalPagination = Math.ceil(result.total / 10);
 	if (pagination.total != totalPagination) {
 		pagination.total = totalPagination;
-		pagination.renderNavigation();
+		pagination.renderPavigation();
 	}
 };
 
 const pagination = {
 	total: 0,
 	current: 0,
-	componet: undefined,
-	componetNav: undefined,
+	component: undefined,
+	componentNav: undefined,
 	init: () => {
-		pagination.componet = document.getElementById('pagination');
-		pagination.componetNav = document.getElementById('nav-pagination');
-		pagination.componetNav.classList.add('hide-pagination');
+		pagination.component = document.getElementById('pagination');
+		pagination.componentNav = document.getElementById('nav-pagination');
+		pagination.componentNav.classList.add('hide-pagination');
 	},
-	renderNavigation: () => {
+	renderPavigation: () => {
 		if (pagination.total <= 1) {
 			return;
 		}
-		pagination.componet.innerHTML = '';
-		pagination.componet.append(
+		pagination.component.innerHTML = '';
+		pagination.component.append(
 			pagination.componentNavItem('Anterior', () => {
 				if (pagination.current > 0) {
 					pagination.current--;
@@ -220,34 +220,51 @@ const pagination = {
 			}),
 		);
 		for (let i = 0; i < pagination.total; i++) {
-			pagination.componet.append(
-				pagination.componentNavItem(i + 1, () => {
-					if (pagination.current !== i) {
-						pagination.current = i;
-						loadSongList(eventResultFetch, pagination.current);
-					}
-				}),
-			);
+			let itemNav = pagination.componentNavItem(i + 1, () => {
+				if (pagination.current !== i) {
+					pagination.current = i;
+					loadSongList(eventResultFetch, pagination.current);
+				}
+			});
+			if (pagination.current == i) {
+				itemNav.classList.add('active');
+			}
+			pagination.component.append(itemNav);
 		}
-		pagination.componet.append(
+		pagination.component.append(
 			pagination.componentNavItem('Siguiente', () => {
-				if (pagination.current < pagination.total) {
+				if (pagination.current < pagination.total - 1) {
 					pagination.current++;
 					loadSongList(eventResultFetch, pagination.current);
 				}
 			}),
 		);
 
-		pagination.componetNav.classList.remove('hide-pagination');
+		pagination.componentNav.classList.remove('hide-pagination');
 	},
 	componentNavItem: (text, event) => {
-		let componet = document.createElement('LI');
-		componet.classList.add('page-link');
-		componet.addEventListener('click', event);
+		let component = document.createElement('LI');
+		component.classList.add('page-link');
+		component.addEventListener('click', () => {
+			event();
+			pagination.changeActivate();
+		});
 
-		componet.innerHTML = `${text}`;
+		component.innerHTML = `${text}`;
 
-		return componet;
+		return component;
+	},
+	changeActivate: () => {
+		pagination.componentNav
+			.querySelector('.page-link.active')
+			?.classList?.remove('active');
+
+		console.log(pagination.current + 1);
+		pagination.componentNav.querySelectorAll('.page-link')?.forEach(element => {
+			if (parseInt(element.innerHTML) == pagination.current + 1) {
+				element.classList.add('active');
+			}
+		});
 	},
 };
 
@@ -270,7 +287,6 @@ const navigation = {
 			} else if (hash === '#page/info') {
 				navigation.events.changeTab('#page/info');
 				navigation.events.changeContent('info');
-				navigation.loaders.home();
 			} else {
 				navigation.events.changeTab('#page/error');
 				navigation.events.changeContent('error');
